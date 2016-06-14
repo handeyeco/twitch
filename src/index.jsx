@@ -1,14 +1,20 @@
 import React from 'react';
 import {render} from 'react-dom';
-import {userData} from './userData';
+
+var userData = {
+  userList: ["ESL_SC2", "OgamingSC2", "cretetion", "freecodecamp", "storbeck", "habathcx", "RobotCaleb", "noobs2ninjas"],
+  userObjs: {}
+}
 
 window.setTimeout(function () {
-  console.log(userData)
+  console.log(userData.userObjs["freecodecamp"]);
 }, 5000);
 
 var TwitchUsers = React.createClass({
   getInitialState: function() {
     return {
+      userList: ["ESL_SC2", "OgamingSC2", "cretetion", "freecodecamp", "storbeck", "habathcx", "RobotCaleb", "noobs2ninjas"],
+      userObjs: {}
     };
   },
 
@@ -17,18 +23,36 @@ var TwitchUsers = React.createClass({
       $.getJSON("https://api.twitch.tv/kraken/channels/" + element, function(result) {
         var name = element,
             displayName = result.display_name,
-            status = result.status,
+            status = result.status || "",
             updated = result.updated_at,
             logo = result.logo,
             url = result.url,
             views = result.views,
             followers = result.followers;
         $.getJSON("https://api.twitch.tv/kraken/streams/" + element, function (result) {
-          var game, stream;
-          if (stream = !!result.stream) {
+          var game = "None", stream = "Nope";
+          if (!!result.stream) {
+            stream = "Yep";
             game = result.stream.game;
           }
-          userData.userObjs[element] = new userData.User(name, displayName, status, updated, logo, url, views, followers, stream, game);
+          userData.userObjs[element] =
+            <div className="container">
+              <div className="row information">
+                <div className="col-sm-12 col-md-6">
+                  <a href={url}><img src={url} alt={displayName}/></a>
+                </div>
+                <div className="col-sm-12 col-md-6">
+                  <a href={url}><h1>{displayName}</h1></a>
+                  <p>Followers: {followers}</p>
+                  <p>Views: {views}</p>
+                  <p>Updated: {updated}</p>
+                </div>
+              </div>
+              <div className="row status">
+                <p>Currently Streaming: {stream} Game: {game}</p>
+                <p>Status: {status.trim()}</p>
+              </div>
+            </div>;
         });
       });
     });
@@ -39,12 +63,8 @@ var TwitchUsers = React.createClass({
   },
 
   render: function() {
-    return (
-      <div>
-        <p>This is the render</p>
-      </div>
-    );
+    return <div>{userData.userObjs["freecodecamp"]}</div>
   }
 });
 
-render(<TwitchUsers source="https://api.github.com/users/octocat/gists" />, document.getElementById('twitch-app'));
+render(<TwitchUsers />, document.getElementById('twitch-app'));

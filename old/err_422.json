@@ -1,0 +1,5 @@
+{
+  "error": "Unprocessable Entity",
+  "status": 422,
+  "message": "Channel 'comster404' is not available on Twitch"
+}

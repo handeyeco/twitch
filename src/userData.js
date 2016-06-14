@@ -1,17 +1,18 @@
 var userData = {
-  userList: ["ESL_SC2", "OgamingSC2", "cretetion", "freecodecamp", "storbeck", "habathcx", "RobotCaleb", "noobs2ninjas"],
+  userList: ["ESL_SC2", "OgamingSC2", "cretetion", "freecodecamp", "storbeck", "habathcx", "RobotCaleb", "noobs2ninjas", "comster404"],
   userObjs: {},
-  User: function (name, displayName, status, updated, logo, url, views, followers, stream, game) {
+  User: function (name, exist, displayName, status, updated, logo, url, views, followers, stream, game) {
     this.name = name;
-    this.displayName = displayName;
-    this.status = status;
-    this.updated = updated;
+    this.exist = exist;
+    this.displayName = displayName || name;
+    this.status = status || "";
+    this.updated = updated || "";
     this.logo = logo;
-    this.url = url;
-    this.views = views;
-    this.followers = followers;
-    this.stream = stream;
-    this.game = game;
+    this.url = url || "https://www.twitch.tv/";
+    this.views = views || 0;
+    this.followers = followers || 0;
+    this.stream = stream || false;
+    this.game = game || "";
   }
 };
 

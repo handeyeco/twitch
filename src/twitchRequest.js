@@ -23,10 +23,10 @@ function twitchAPIRequest (element) {
         game = result.stream.game;
       }
 
-      //Create new User object for each username
+      //Create new User object for each username that exists
       userData.userObjs[element] = new userData.User(name, exist, displayName, status, updated, logo, url, views, followers, stream, game);
     });
-    
+
   //Handle usernames that don't exist
   }).error(function (){
     userData.userObjs[element] = new userData.User(element, false);

@@ -6,6 +6,7 @@ import {twitchAPIRequest} from './twitchRequest'
 var TwitchUsers = React.createClass({
   getInitialState: function() {
     return {
+      selectedUser: ""
     };
   },
 

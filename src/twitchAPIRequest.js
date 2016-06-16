@@ -10,7 +10,7 @@ function twitchAPIRequest(element) {
         exist = true,
         displayName = result.display_name,
         status = result.status,
-        updated = result.updated_at,
+        updated = /\d{4}-\d{2}-\d{2}/.exec(result.updated_at)[0],
         logo = result.logo,
         url = result.url,
         views = result.views,

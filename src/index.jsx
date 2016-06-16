@@ -24,11 +24,14 @@ var TwitchApp = React.createClass({
 
   polling: function () {
     this.setState({userObjs: userData.userObjs});
+    if (userData.userObjs.length !== userData.userList.length) {
+      setTimeout(this.polling, 500);
+    }
   },
 
   componentDidMount: function() {
     userData.userList.forEach(twitchAPIRequest);
-    setInterval(this.polling, 1000);
+    setTimeout(this.polling, 200);
   },
 
   componentWillUnmount: function() {
@@ -84,7 +87,8 @@ TwitchApp.displayUser = React.createClass({
       return (
         <div id="user-display-container">
           <img src={userObj.logo} />
-          <div className="user-data">
+
+          <div id="user-data">
             <a href={userObj.url}>
               <h1>{userObj.displayName}</h1>
             </a>
@@ -92,7 +96,8 @@ TwitchApp.displayUser = React.createClass({
             <p>Views: {userObj.views}</p>
             <p>Updated: {userObj.updated}</p>
           </div>
-          <div className="user-status">
+
+          <div id="user-status">
             <p>Currently Streaming: {userObj.stream ? "Yes Game: " + userObj.game : "Nope"}</p>
             <p>Status: {userObj.status}</p>
           </div>

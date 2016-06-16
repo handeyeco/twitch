@@ -2,7 +2,7 @@
 
 import {userData} from './userData';
 
-function twitchAPIRequest (element) {
+function twitchAPIRequest(element) {
 
   //AJAX request to get channel information
   jQuery.getJSON("https://api.twitch.tv/kraken/channels/" + element, function(result) {
@@ -24,12 +24,25 @@ function twitchAPIRequest (element) {
       }
 
       //Create new User object for each username that exists
-      userData.userObjs[element] = new userData.User(name, exist, displayName, status, updated, logo, url, views, followers, stream, game);
+      userData.userObjs.push(new userData.User(name, exist, displayName, status, updated, logo, url, views, followers, stream, game));
+
+      //Sort user data by whether an object exists and whether it's streaming
+      userData.userObjs = userData.userObjs.sort(function (a, b) {
+        if (!a.exist || (a.stream === false && b.stream === true)) {
+          return 1;
+        } else if (!b.exist || (b.stream === false && a.stream === true)) {
+          return -1;
+        } else {
+          return 0;
+        }
+
+      });
     });
 
   //Handle usernames that don't exist
+  //Automatically pushed to the end
   }).error(function (){
-    userData.userObjs[element] = new userData.User(element, false);
+    userData.userObjs.push(new userData.User(element, false));
   });
 
 }

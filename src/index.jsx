@@ -88,7 +88,12 @@ TwitchApp.displayUser = React.createClass({
     var userObj = this.props.selectedUser;
 
     if (!userObj) {
-      return ( <h1 className="important-message">Welcome, please select a user</h1> );
+      return (
+        <div className="important-message">
+          <h1>Welcome</h1>
+          <p>Please select a user</p>
+        </div>
+      );
     }
 
     if (userObj.exist) {
@@ -113,7 +118,12 @@ TwitchApp.displayUser = React.createClass({
       );
     }
 
-    return ( <h1 className="important-message">Unable to find user</h1> );
+    return (
+      <div className="important-message">
+        <h1>Sorry</h1>
+        <p>Unable to find user</p>
+      </div>
+     );
 
   }
 });

@@ -1,12 +1,12 @@
 $dark-purple: #3B2064;
 $light-purple: #6441A5;
-$white: #ffffff;
+$white: #FFFFFF;
+$grey-mist: #CCCCCC;
 
 $border: 4px solid $light-purple;
 $font-stack : sans-serif;
 
 body, html {
-  height: 100%;
   font-family: $font-stack;
 }
 
@@ -26,10 +26,11 @@ nav {
 }
 
 #user-list-container {
-  display: inline-block;
+  overflow: hidden;
   float:left;
-  height: 100%;
-  width: 20%;
+  width: 15%;
+  margin-bottom: -5000em;
+  padding-bottom: 5000em;
   min-width: 10em;
   background-color: $light-purple;
   color: $white;
@@ -46,5 +47,32 @@ nav {
       background-color: $white;
       color: $light-purple;
     }
+  }
+}
+
+#user-display-container {
+
+
+  #user-data {
+
+  }
+
+  #user-status {
+
+  }
+}
+
+.important-message {
+  padding-top: 30vh;
+  text-align: center;
+  color: $grey-mist;
+  text-transform: uppercase;
+
+  h1 {
+    font-size: 4em;
+  }
+
+  p {
+    font-size: 2em;
   }
 }

@@ -1,10 +1,4 @@
 var userData = {
-  //Initial list of users to look up
-  userList: ["ESL_SC2", "OgamingSC2", "comster404", "cretetion", "freecodecamp", "storbeck", "habathcx", "RobotCaleb", "noobs2ninjas"],
-
-  //Array for objects created after AJAX request
-  userObjs: [],
-
   //Constructor for userObjs
   User: function (name, exist, displayName, status, updated, logo, url, views, followers, stream, game) {
     this.name = name;

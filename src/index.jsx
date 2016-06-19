@@ -6,36 +6,45 @@ import {twitchAPIRequest} from './twitchAPIRequest'
 var TwitchApp = React.createClass({
   getInitialState: function() {
     return {
-      userObjs: [{displayName: "Loading"}],
+      userList: ["ESL_SC2", "OgamingSC2", "comster404", "cretetion", "freecodecamp", "storbeck", "habathcx", "RobotCaleb", "noobs2ninjas"],
+      userObjs: [],
       selectedUser: null
     };
   },
 
-  handleSelection: function (event) {
-    var newUserName = event.target.innerHTML;
-    var newUserObj = userData.userObjs.filter(function (e){
-      return e.name === newUserName;
-    })[0];
-
-    this.setState(function(state, currentProps) {
-      return {selectedUser: newUserObj};
-    });
-  },
-
-  polling: function () {
-    this.setState({userObjs: userData.userObjs});
-    if (userData.userObjs.length !== userData.userList.length) {
-      setTimeout(this.polling, 500);
-    }
-  },
-
   componentDidMount: function() {
-    userData.userList.forEach(twitchAPIRequest);
-    setTimeout(this.polling, 200);
+    var that = this;
+    this.state.userList.forEach(function (el) {
+      twitchAPIRequest(el, that);
+    });
   },
 
   componentWillUnmount: function() {
     this.serverRequest.abort();
+  },
+
+  handleAjaxReturn: function (userObj) {
+    var newState = this.state.userObjs.slice();
+    newState.push(userObj);
+    newState.sort(function (a, b) {
+      if (!a.exist || (a.stream === false && b.stream === true)) {
+        return 1;
+      } else if (!b.exist || (b.stream === false && a.stream === true)) {
+        return -1;
+      } else {
+        return 0;
+      }
+    });
+    this.setState({userObjs: newState});
+  },
+
+  handleSelection: function (event) {
+    var newUserName = event.target.innerHTML;
+    var newUserObj = this.state.userObjs.filter(function (e){
+      return e.name === newUserName;
+    })[0];
+
+    this.setState({selectedUser: newUserObj});
   },
 
   render: function() {
@@ -109,9 +118,5 @@ TwitchApp.displayUser = React.createClass({
 
   }
 });
-
-window.setTimeout(function () {
-  console.log(userData.userObjs);
-}, 2000);
 
 render(<TwitchApp />, document.getElementById('twitch-app'));

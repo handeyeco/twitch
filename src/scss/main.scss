@@ -3,57 +3,48 @@ $light-purple: #6441A5;
 $white: #ffffff;
 
 $border: 4px solid $light-purple;
+$font-stack : sans-serif;
 
-* {
-  // border: 1px dashed $white;
-}
-
-body {
-  padding-top: 50px;
-  font-family: sans-serif;
+body, html {
+  height: 100%;
+  font-family: $font-stack;
 }
 
 nav {
-  position: fixed;
-  top: 0px;
-  left: 0px;
-  z-index: 9999;
-  width: 100%;
-  height: 40px;
-  padding-top: 10px;
-  background-color: $white;
+  height: 2em;
   border-bottom: $border;
 
-  img {
-    margin-left: 10em;
-    height: 70%;
+  padding: {
+    top: 0.5em;
+    bottom: 0.5em;
+    left: 3em;
   }
-}
 
-#user-list-container,
-#user-display-container,
-#user-display-container img,
-#user-data  {
-  float: left;
+  img {
+    height: 100%;
+  }
 }
 
 #user-list-container {
+  display: inline-block;
+  float:left;
+  height: 100%;
+  width: 20%;
+  min-width: 10em;
+  background-color: $light-purple;
+  color: $white;
 
-  ul {
-    list-style-type: none;
-    text-transform: uppercase;
-  }
-}
+  li {
+    padding: 1em;
 
-#user-display-container {
+    text: {
+      align: right;
+      transform: uppercase;
+    }
 
-  #user-status {
-    border-top: $border;
-    clear: both;
-  }
-
-  img {
-    border-radius: 50%;
-    width: 10em;
+    &:hover {
+      background-color: $white;
+      color: $light-purple;
+    }
   }
 }

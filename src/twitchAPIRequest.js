@@ -1,8 +1,20 @@
 /* jshint esversion: 6 */
 
-import {userData} from './userData';
-
 function twitchAPIRequest(element, that) {
+  //Constructor for users returned via AJAX
+  function User (name, exist, displayName, status, updated, logo, url, views, followers, stream, game) {
+    this.name = name;
+    this.exist = exist;
+    this.displayName = displayName || name;
+    this.status = status || "";
+    this.updated = updated || "";
+    this.logo = logo;
+    this.url = url || "https://www.twitch.tv/";
+    this.views = views || 0;
+    this.followers = followers || 0;
+    this.stream = stream || false;
+    this.game = game || "";
+  }
 
   //AJAX request to get channel information
   jQuery.getJSON("https://api.twitch.tv/kraken/channels/" + element, function(result) {
@@ -24,12 +36,12 @@ function twitchAPIRequest(element, that) {
       }
 
       //Create new User object for each username that exists
-      that.handleAjaxReturn(new userData.User(name, exist, displayName, status, updated, logo, url, views, followers, stream, game));
+      that.handleAjaxReturn(new User(name, exist, displayName, status, updated, logo, url, views, followers, stream, game));
     });
 
   //Handle usernames that don't exist
   }).error(function (){
-    that.handleAjaxReturn(new userData.User(element, false));
+    that.handleAjaxReturn(new User(element, false));
   });
 
 }

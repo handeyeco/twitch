@@ -1,6 +1,5 @@
 import React from 'react';
 import {render} from 'react-dom';
-import {userData} from './userData'
 import {twitchAPIRequest} from './twitchAPIRequest'
 
 var TwitchApp = React.createClass({
@@ -14,8 +13,8 @@ var TwitchApp = React.createClass({
 
   componentDidMount: function() {
     var that = this;
-    this.state.userList.forEach(function (el) {
-      twitchAPIRequest(el, that);
+    this.state.userList.forEach(function (element) {
+      twitchAPIRequest(element, that);
     });
   },
 
@@ -23,9 +22,9 @@ var TwitchApp = React.createClass({
     this.serverRequest.abort();
   },
 
-  handleAjaxReturn: function (userObj) {
+  handleAjaxReturn: function (newUser) {
     var newState = this.state.userObjs.slice();
-    newState.push(userObj);
+    newState.push(newUser);
     newState.sort(function (a, b) {
       if (!a.exist || (a.stream === false && b.stream === true)) {
         return 1;

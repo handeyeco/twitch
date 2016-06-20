@@ -1,6 +1,10 @@
 body, html {
   font-family: sans-serif; }
 
+a:visited, a:hover, a:link, a:active {
+  text-decoration: none;
+  color: black; }
+
 nav {
   height: 2em;
   border-bottom: 4px solid #6441A5;
@@ -26,6 +30,17 @@ nav {
     #user-list-container li:hover {
       background-color: #FFFFFF;
       color: #6441A5; }
+
+#user-display-container {
+  padding-top: 2em; }
+  #user-display-container h1 {
+    font-size: 2.5em;
+    color: #6441A5; }
+  #user-display-container img {
+    padding-left: 2em;
+    padding-right: 2em;
+    border-radius: 50%;
+    float: left; }
 
 .important-message {
   padding-top: 30vh;

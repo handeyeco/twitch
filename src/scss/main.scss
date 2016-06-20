@@ -5,9 +5,17 @@ $grey-mist: #CCCCCC;
 
 $border: 4px solid $light-purple;
 $font-stack : sans-serif;
+$font-color: black;
 
 body, html {
   font-family: $font-stack;
+}
+
+a {
+  &:visited, &:hover, &:link, &:active {
+    text-decoration: none;
+    color: $font-color;
+  }
 }
 
 nav {
@@ -51,7 +59,24 @@ nav {
 }
 
 #user-display-container {
+  padding: {
+    top: 2em;
+  }
 
+  h1 {
+    font-size: 2.5em;
+    color: $light-purple;
+  }
+
+  img {
+    padding: {
+      left: 2em;
+      right: 2em;
+    }
+
+    border-radius: 50%;
+    float: left;
+  }
 
   #user-data {
 

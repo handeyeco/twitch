@@ -50,7 +50,8 @@ var TwitchApp = React.createClass({
     return (
       <div>
         <TwitchApp.header />
-        <TwitchApp.userList userObjs={this.state.userObjs} handleSelection={this.handleSelection} />
+        <TwitchApp.userListMobile userObjs={this.state.userObjs} />
+        <TwitchApp.userList userObjs={this.state.userObjs} selectedUser= {this.state.selectedUser} handleSelection={this.handleSelection} />
         <TwitchApp.displayUser selectedUser={this.state.selectedUser} />
       </div>
     )
@@ -72,16 +73,19 @@ TwitchApp.header = React.createClass({
 TwitchApp.userList = React.createClass({
   render: function() {
     var userListItems = this.props.userObjs.map(function (element) {
+      var assembledClass = element.exist ? element.stream ? "streaming" : "quiet" : "error";
+      if (this.props.selectedUser && element.name === this.props.selectedUser.name) {
+        assembledClass += " selected";
+      }
+
       return (
-        <li onClick={this.props.handleSelection} className={element.exist ? element.stream ? "streaming" : "quiet" : "error"} id={element.name} key={element.name}>
-          <a href={element.url}>
-            {element.name}
-          </a>
+        <li onClick={this.props.handleSelection} className={assembledClass} key={element.name}>
+          {element.name}
         </li>
     )}.bind(this));
 
     return (
-      <ul id="user-list">{userListItems}</ul>
+      <ul className="user-list">{userListItems}</ul>
     )
   }
 });
@@ -89,11 +93,11 @@ TwitchApp.userList = React.createClass({
 TwitchApp.userListMobile = React.createClass({
   render: function() {
     var userListItems = this.props.userObjs.map(function (element) {
-      return <li className={element.exist ? element.stream ? "streaming" : "quiet" : "error"} key={element.name}>{element.name}</li>
+      return <li className={element.exist ? element.stream ? "streaming" : "quiet" : "error"} key={element.name}><a href={element.url}>{element.name}</a></li>
     }.bind(this));
 
     return (
-      <ul id="user-list">{userListItems}</ul>
+      <ul className="user-list-mobile">{userListItems}</ul>
     )
   }
 });
@@ -112,22 +116,25 @@ TwitchApp.displayUser = React.createClass({
     }
 
     if (userObj.exist) {
+      var shortURL = userObj.url.replace(/^https:\/\/(.+)/, "$1");
       return (
-        <div id="user-display-container">
+        <div className="user-display-container">
           <img src={userObj.logo} />
 
-          <div id="user-data">
+          <div className="user-data">
             <a href={userObj.url}>
               <h1>{userObj.displayName}</h1>
             </a>
-            <p>Followers: {userObj.followers}</p>
-            <p>Views: {userObj.views}</p>
-            <p>Updated: {userObj.updated}</p>
+            <p><span className="label">Followers:</span> {userObj.followers}</p>
+            <p><span className="label">Views:</span> {userObj.views}</p>
+            <p><span className="label">Updated:</span> {userObj.updated}</p>
+            <p><a href={userObj.url}>{shortURL}</a></p>
           </div>
 
-          <div id="user-status">
-            <p>Currently Streaming: {userObj.stream ? "Yes Game: " + userObj.game : "Nope"}</p>
-            <p>Status: {userObj.status}</p>
+          <div className="user-status">
+            <p><span className="label">Currently Streaming:</span> {userObj.stream ? "Yes" : "Nope"}</p>
+            {userObj.stream ? <p><span className="label">Game:</span> {userObj.game}</p> : ""}
+            <p><span className="label">Status:</span> {userObj.status}</p>
           </div>
         </div>
       );

@@ -137,7 +137,7 @@ table {
     border-spacing: 0;
 }
 /*************************/
-//        STYLES         //
+//     MOBILE STYLES     //
 /*************************/
 body {
     padding-top: 3em;
@@ -156,15 +156,13 @@ nav {
         height: 100%;
     }
 }
+.important-message,
 .user-display-container,
 .user-list {
     display: none;
 }
 .user-list-mobile {
     width: 100%;
-    // height: 100%;
-    // overflow: auto;
-    // position: fixed;
     color: $white;
     font-size: 2em;
     text-transform: uppercase;
@@ -186,4 +184,97 @@ nav {
         text-decoration: none;
         color: $white;
     }
+}
+/*************************/
+//       BIG STYLES      //
+/*************************/
+@media only screen and (min-width : 768px) {
+    .user-list-mobile {
+        display: none;
+    }
+    .important-message,
+    .user-display-container,
+    .user-list {
+        display: block;
+    }
+    nav {
+        border-bottom: $border;
+    }
+    .user-list {
+        position: fixed;
+        height: 100%;
+        width: 20%;
+        min-width: 12em;
+        background-color: $light-purple;
+        color: white;
+        text-transform: uppercase;
+        overflow: scroll;
+        li {
+            padding: 1em;
+            border-top: $border;
+            cursor: pointer;
+        }
+        li.selected,
+        li:hover {
+            background-color: $white;
+            color: $light-purple;
+        }
+    }
+    .important-message {
+        font-size: 3.5em;
+        text-align: center;
+        line-height: 150%;
+        color: $grey-mist;
+        padding-top: 20vh;
+        margin-left: 20%;
+    }
+    .user-display-container {
+        padding: {
+            top: 2em;
+            left: 25%;
+        }
+        img {
+            display: inline-block;
+            border-radius: 50%;
+            margin: 0 2em 2em 0;
+        }
+        a:active,
+        a:hover,
+        a:link,
+        a:visited {
+            color: $light-purple;
+            text-decoration: none;
+        }
+        span.label {
+            color: $light-purple;
+            // font-weight: 800;
+            padding-right: 0.5em;
+        }
+        .user-data {
+            display: inline-block;
+            vertical-align: top;
+            h1 {
+                font-size: 2em;
+                padding: 1em 0 0.5em;
+            }
+            p {
+                padding: 0 0 1em 1em;
+            }
+        }
+        .user-status {
+            p {
+                padding: 0 0 1em 1em;
+            }
+        }
+    }
+}
+/*************************/
+//       BIG STYLES      //
+/*************************/
+.no-js {
+  font-size: 3.5em;
+  text-align: center;
+  line-height: 150%;
+  color: $grey-mist;
+  padding-top: 2em;
 }

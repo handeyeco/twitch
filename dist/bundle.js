@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "9fa2b54bbe19eaad1bfb"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "4239859e705a271399e4"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -8190,9 +8190,7 @@
 
 	var _reactDom = __webpack_require__(166);
 
-	var _userData = __webpack_require__(253);
-
-	var _twitchAPIRequest = __webpack_require__(257);
+	var _twitchAPIRequest = __webpack_require__(253);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -8201,33 +8199,45 @@
 
 	  getInitialState: function getInitialState() {
 	    return {
-	      userObjs: [{ displayName: "Loading" }],
+	      userList: ["ESL_SC2", "OgamingSC2", "comster404", "cretetion", "freecodecamp", "storbeck", "habathcx", "RobotCaleb", "noobs2ninjas"],
+	      userObjs: [],
 	      selectedUser: null
 	    };
 	  },
 
-	  handleSelection: function handleSelection(event) {
-	    var newUserName = event.target.innerHTML;
-	    var newUserObj = _userData.userData.userObjs.filter(function (e) {
-	      return e.name === newUserName;
-	    })[0];
-
-	    this.setState(function (state, currentProps) {
-	      return { selectedUser: newUserObj };
-	    });
-	  },
-
-	  polling: function polling() {
-	    this.setState({ userObjs: _userData.userData.userObjs });
-	  },
-
 	  componentDidMount: function componentDidMount() {
-	    _userData.userData.userList.forEach(_twitchAPIRequest.twitchAPIRequest);
-	    setInterval(this.polling, 1000);
+	    var that = this;
+	    this.state.userList.forEach(function (element) {
+	      (0, _twitchAPIRequest.twitchAPIRequest)(element, that);
+	    });
 	  },
 
 	  componentWillUnmount: function componentWillUnmount() {
 	    this.serverRequest.abort();
+	  },
+
+	  handleAjaxReturn: function handleAjaxReturn(newUser) {
+	    var newState = this.state.userObjs.slice();
+	    newState.push(newUser);
+	    newState.sort(function (a, b) {
+	      if (!a.exist || a.stream === false && b.stream === true) {
+	        return 1;
+	      } else if (!b.exist || b.stream === false && a.stream === true) {
+	        return -1;
+	      } else {
+	        return 0;
+	      }
+	    });
+	    this.setState({ userObjs: newState });
+	  },
+
+	  handleSelection: function handleSelection(event) {
+	    var newUserName = event.target.innerHTML;
+	    var newUserObj = this.state.userObjs.filter(function (e) {
+	      return e.name === newUserName;
+	    })[0];
+
+	    this.setState({ selectedUser: newUserObj });
 	  },
 
 	  render: function render() {
@@ -8235,7 +8245,8 @@
 	      'div',
 	      null,
 	      _react2.default.createElement(TwitchApp.header, null),
-	      _react2.default.createElement(TwitchApp.userList, { userObjs: this.state.userObjs, handleSelection: this.handleSelection }),
+	      _react2.default.createElement(TwitchApp.userListMobile, { userObjs: this.state.userObjs }),
+	      _react2.default.createElement(TwitchApp.userList, { userObjs: this.state.userObjs, selectedUser: this.state.selectedUser, handleSelection: this.handleSelection }),
 	      _react2.default.createElement(TwitchApp.displayUser, { selectedUser: this.state.selectedUser })
 	    );
 	  }
@@ -8262,21 +8273,46 @@
 
 	  render: function render() {
 	    var userListItems = this.props.userObjs.map(function (element) {
+	      var assembledClass = element.exist ? element.stream ? "streaming" : "quiet" : "error";
+	      if (this.props.selectedUser && element.name === this.props.selectedUser.name) {
+	        assembledClass += " selected";
+	      }
+
 	      return _react2.default.createElement(
 	        'li',
-	        { onClick: this.props.handleSelection, className: element.exist ? element.stream ? "streaming" : "quiet" : "error", id: element.name, key: element.name },
+	        { onClick: this.props.handleSelection, className: assembledClass, key: element.name },
 	        element.name
 	      );
 	    }.bind(this));
 
 	    return _react2.default.createElement(
-	      'div',
-	      { id: 'user-list-container' },
-	      _react2.default.createElement(
-	        'ul',
-	        { id: 'user-list' },
-	        userListItems
-	      )
+	      'ul',
+	      { className: 'user-list' },
+	      userListItems
+	    );
+	  }
+	});
+
+	TwitchApp.userListMobile = _react2.default.createClass({
+	  displayName: 'userListMobile',
+
+	  render: function render() {
+	    var userListItems = this.props.userObjs.map(function (element) {
+	      return _react2.default.createElement(
+	        'li',
+	        { className: element.exist ? element.stream ? "streaming" : "quiet" : "error", key: element.name },
+	        _react2.default.createElement(
+	          'a',
+	          { href: element.url },
+	          element.name
+	        )
+	      );
+	    }.bind(this));
+
+	    return _react2.default.createElement(
+	      'ul',
+	      { className: 'user-list-mobile' },
+	      userListItems
 	    );
 	  }
 	});
@@ -8289,20 +8325,30 @@
 
 	    if (!userObj) {
 	      return _react2.default.createElement(
-	        'h1',
+	        'div',
 	        { className: 'important-message' },
-	        'Welcome, please select a user'
+	        _react2.default.createElement(
+	          'h1',
+	          null,
+	          'Welcome'
+	        ),
+	        _react2.default.createElement(
+	          'p',
+	          null,
+	          'Please select a user'
+	        )
 	      );
 	    }
 
 	    if (userObj.exist) {
+	      var shortURL = userObj.url.replace(/^https:\/\/(.+)/, "$1");
 	      return _react2.default.createElement(
 	        'div',
-	        { id: 'user-display-container' },
+	        { className: 'user-display-container' },
 	        _react2.default.createElement('img', { src: userObj.logo }),
 	        _react2.default.createElement(
 	          'div',
-	          { id: 'user-data' },
+	          { className: 'user-data' },
 	          _react2.default.createElement(
 	            'a',
 	            { href: userObj.url },
@@ -8315,35 +8361,80 @@
 	          _react2.default.createElement(
 	            'p',
 	            null,
-	            'Followers: ',
+	            _react2.default.createElement(
+	              'span',
+	              { className: 'label' },
+	              'Followers:'
+	            ),
+	            ' ',
 	            userObj.followers
 	          ),
 	          _react2.default.createElement(
 	            'p',
 	            null,
-	            'Views: ',
+	            _react2.default.createElement(
+	              'span',
+	              { className: 'label' },
+	              'Views:'
+	            ),
+	            ' ',
 	            userObj.views
 	          ),
 	          _react2.default.createElement(
 	            'p',
 	            null,
-	            'Updated: ',
+	            _react2.default.createElement(
+	              'span',
+	              { className: 'label' },
+	              'Updated:'
+	            ),
+	            ' ',
 	            userObj.updated
-	          )
-	        ),
-	        _react2.default.createElement(
-	          'div',
-	          { id: 'user-status' },
-	          _react2.default.createElement(
-	            'p',
-	            null,
-	            'Currently Streaming: ',
-	            userObj.stream ? "Yes Game: " + userObj.game : "Nope"
 	          ),
 	          _react2.default.createElement(
 	            'p',
 	            null,
-	            'Status: ',
+	            _react2.default.createElement(
+	              'a',
+	              { href: userObj.url },
+	              shortURL
+	            )
+	          )
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'user-status' },
+	          _react2.default.createElement(
+	            'p',
+	            null,
+	            _react2.default.createElement(
+	              'span',
+	              { className: 'label' },
+	              'Currently Streaming:'
+	            ),
+	            ' ',
+	            userObj.stream ? "Yes" : "Nope"
+	          ),
+	          userObj.stream ? _react2.default.createElement(
+	            'p',
+	            null,
+	            _react2.default.createElement(
+	              'span',
+	              { className: 'label' },
+	              'Game:'
+	            ),
+	            ' ',
+	            userObj.game
+	          ) : "",
+	          _react2.default.createElement(
+	            'p',
+	            null,
+	            _react2.default.createElement(
+	              'span',
+	              { className: 'label' },
+	              'Status:'
+	            ),
+	            ' ',
 	            userObj.status
 	          )
 	        )
@@ -8351,16 +8442,21 @@
 	    }
 
 	    return _react2.default.createElement(
-	      'h1',
+	      'div',
 	      { className: 'important-message' },
-	      'Unable to find user'
+	      _react2.default.createElement(
+	        'h1',
+	        null,
+	        'Sorry'
+	      ),
+	      _react2.default.createElement(
+	        'p',
+	        null,
+	        'Unable to find user'
+	      )
 	    );
 	  }
 	});
-
-	window.setTimeout(function () {
-	  console.log(_userData.userData.userObjs);
-	}, 2000);
 
 	(0, _reactDom.render)(_react2.default.createElement(TwitchApp, null), document.getElementById('twitch-app'));
 
@@ -28957,15 +29053,11 @@
 
 	"use strict";
 
-	var userData = {
-	  //Initial list of users to look up
-	  userList: ["ESL_SC2", "OgamingSC2", "comster404", "cretetion", "freecodecamp", "storbeck", "habathcx", "RobotCaleb", "noobs2ninjas"],
+	/* jshint esversion: 6 */
 
-	  //Array for objects created after AJAX request
-	  userObjs: [],
-
-	  //Constructor for userObjs
-	  User: function User(name, exist, displayName, status, updated, logo, url, views, followers, stream, game) {
+	function twitchAPIRequest(element, that) {
+	  //Constructor for users returned via AJAX
+	  function User(name, exist, displayName, status, updated, logo, url, views, followers, stream, game) {
 	    this.name = name;
 	    this.exist = exist;
 	    this.displayName = displayName || name;
@@ -28978,11 +29070,40 @@
 	    this.stream = stream || false;
 	    this.game = game || "";
 	  }
-	};
 
-	exports.userData = userData;
+	  //AJAX request to get channel information
+	  jQuery.getJSON("https://api.twitch.tv/kraken/channels/" + element, function (result) {
+	    var name = element,
+	        exist = true,
+	        displayName = result.display_name,
+	        status = result.status,
+	        updated = /\d{4}-\d{2}-\d{2}/.exec(result.updated_at)[0],
+	        logo = result.logo,
+	        url = result.url,
+	        views = result.views,
+	        followers = result.followers;
 
-	/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(254); if (makeExportsHot(module, __webpack_require__(150))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "userData.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+	    //Ajax request to get streaming information
+	    jQuery.getJSON("https://api.twitch.tv/kraken/streams/" + element, function (result) {
+	      var stream = !!result.stream,
+	          game = "Game Off";
+	      if (stream) {
+	        game = result.stream.game;
+	      }
+
+	      //Create new User object for each username that exists
+	      that.handleAjaxReturn(new User(name, exist, displayName, status, updated, logo, url, views, followers, stream, game));
+	    });
+
+	    //Handle usernames that don't exist
+	  }).error(function () {
+	    that.handleAjaxReturn(new User(element, false));
+	  });
+	}
+
+	exports.twitchAPIRequest = twitchAPIRequest;
+
+	/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(254); if (makeExportsHot(module, __webpack_require__(150))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "twitchAPIRequest.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)(module)))
 
 /***/ },
@@ -29111,65 +29232,6 @@
 	}
 
 	module.exports = isReactElementish;
-
-/***/ },
-/* 257 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(77), RootInstanceProvider = __webpack_require__(85), ReactMount = __webpack_require__(87), React = __webpack_require__(150); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
-
-	"use strict";
-
-	var _userData = __webpack_require__(253);
-
-	function twitchAPIRequest(element) {
-
-	  //AJAX request to get channel information
-	  jQuery.getJSON("https://api.twitch.tv/kraken/channels/" + element, function (result) {
-	    var name = element,
-	        exist = true,
-	        displayName = result.display_name,
-	        status = result.status,
-	        updated = result.updated_at,
-	        logo = result.logo,
-	        url = result.url,
-	        views = result.views,
-	        followers = result.followers;
-
-	    //Ajax request to get streaming information
-	    jQuery.getJSON("https://api.twitch.tv/kraken/streams/" + element, function (result) {
-	      var stream = !!result.stream,
-	          game = "Game Off";
-	      if (stream) {
-	        game = result.stream.game;
-	      }
-
-	      //Create new User object for each username that exists
-	      _userData.userData.userObjs.push(new _userData.userData.User(name, exist, displayName, status, updated, logo, url, views, followers, stream, game));
-
-	      //Sort user data by whether an object exists and whether it's streaming
-	      _userData.userData.userObjs = _userData.userData.userObjs.sort(function (a, b) {
-	        if (!a.exist || a.stream === false && b.stream === true) {
-	          return 1;
-	        } else if (!b.exist || b.stream === false && a.stream === true) {
-	          return -1;
-	        } else {
-	          return 0;
-	        }
-	      });
-	    });
-
-	    //Handle usernames that don't exist
-	    //Automatically pushed to the end
-	  }).error(function () {
-	    _userData.userData.userObjs.push(new _userData.userData.User(element, false));
-	  });
-	} /* jshint esversion: 6 */
-
-	exports.twitchAPIRequest = twitchAPIRequest;
-
-	/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(254); if (makeExportsHot(module, __webpack_require__(150))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "twitchAPIRequest.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)(module)))
 
 /***/ }
 /******/ ]);

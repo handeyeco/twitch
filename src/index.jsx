@@ -72,13 +72,28 @@ TwitchApp.header = React.createClass({
 TwitchApp.userList = React.createClass({
   render: function() {
     var userListItems = this.props.userObjs.map(function (element) {
-      return <li onClick={this.props.handleSelection} className={element.exist ? element.stream ? "streaming" : "quiet" : "error"} id={element.name} key={element.name}>{element.name}</li>
+      return (
+        <li onClick={this.props.handleSelection} className={element.exist ? element.stream ? "streaming" : "quiet" : "error"} id={element.name} key={element.name}>
+          <a href={element.url}>
+            {element.name}
+          </a>
+        </li>
+    )}.bind(this));
+
+    return (
+      <ul id="user-list">{userListItems}</ul>
+    )
+  }
+});
+
+TwitchApp.userListMobile = React.createClass({
+  render: function() {
+    var userListItems = this.props.userObjs.map(function (element) {
+      return <li className={element.exist ? element.stream ? "streaming" : "quiet" : "error"} key={element.name}>{element.name}</li>
     }.bind(this));
 
     return (
-      <div id="user-list-container">
-        <ul id="user-list">{userListItems}</ul>
-      </div>
+      <ul id="user-list">{userListItems}</ul>
     )
   }
 });

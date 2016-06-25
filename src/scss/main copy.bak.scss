@@ -1,0 +1,91 @@
+$dark-purple: #3B2064;
+$light-purple: #6441A5;
+$white: #FFFFFF;
+$grey-mist: #CCCCCC;
+$border: 4px solid $light-purple;
+$font-stack: sans-serif;
+$font-color: black;
+body,
+html {
+    font-family: $font-stack;
+}
+a {
+    &:active,
+    &:hover,
+    &:link,
+    &:visited {
+        text-decoration: none;
+        color: $font-color;
+    }
+}
+nav {
+    height: 2em;
+    border-bottom: $border;
+    padding: {
+        top: 0.5em;
+        bottom: 0.5em;
+        left: 3em;
+    }
+    img {
+        height: 100%;
+    }
+}
+#user-list-container {
+    ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        width: 15%;
+        min-width: 10em;
+        background-color: $light-purple;
+        color: $white;
+        position: fixed;
+        height: 100%;
+        overflow: auto;
+        li {
+            padding: 1em;
+            text: {
+                align: right;
+                transform: uppercase;
+            }
+            &:hover {
+                background-color: $white;
+                color: $light-purple;
+            }
+        }
+    }
+}
+#user-display-container {
+    padding: {
+        top: 2em;
+    }
+    margin: {
+        left: 15em;;
+    }
+    h1 {
+        font-size: 2.5em;
+        color: $light-purple;
+    }
+    img {
+        padding: {
+            left: 2em;
+            right: 2em;
+        }
+        border-radius: 50%;
+        float: left;
+    }
+    #user-data {}
+    #user-status {}
+}
+.important-message {
+    padding-top: 30vh;
+    text-align: center;
+    color: $grey-mist;
+    text-transform: uppercase;
+    h1 {
+        font-size: 4em;
+    }
+    p {
+        font-size: 2em;
+    }
+}

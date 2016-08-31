@@ -6,7 +6,7 @@
   "scripts": {
     "start": "webpack-dev-server --hot --inline",
     "production": "webpack --config ./webpack.prod.config.js --progress --colors",
-    "watch-css": "nodemon -e scss -x \"npm run build-css\"",
+    "watch-css": "node-sass --watch src/scss/main.scss dist/styles/main.css",
     "build-css": "node-sass --include-path scss src/scss/main.scss   dist/styles/main.css",
     "test": "mocha --compilers js:babel-core/register --recursive"
   },
